@@ -1,12 +1,25 @@
 "use client"
+import { authModalState } from '@/atoms/authModalAtom';
 import React from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 type signupProps = {
     
 };
 
 const Signup:React.FC<signupProps> = () => {
-    
+    const authModal = useRecoilValue(authModalState);
+
+    const setAuthModalState= useSetRecoilState(authModalState)
+    const handleClick=(type:"login" | "signup")=>{
+        setAuthModalState((prev)=>({...prev,type,isOpen:true}))
+        
+    }
+    const handleClose = () => {
+        setAuthModalState((prev) => ({ ...prev, isOpen: false }));
+    };
+
+    if (!authModal.isOpen) return null;
     return <section className="bg-gray-50 dark:bg-gray-900">
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
        
@@ -30,9 +43,9 @@ const Signup:React.FC<signupProps> = () => {
                     </div>
                   
                     <button type="submit" className="w-full bg-blue-700 text-white bg-primary-600 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create an account</button>
-                    <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                        Already have an account? <a href="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500 text-blue-700">Login here</a>
-                    </p>
+                   <button onClick={()=>handleClick("login")}> <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                        Already have an account? <a href="" className="font-medium text-primary-600 hover:underline dark:text-primary-500 text-blue-700">Login here</a>
+                    </p></button>
                 </form>
             </div>
         </div>
