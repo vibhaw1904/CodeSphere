@@ -11,8 +11,8 @@ type AppbarProps = {};
 const Appbar: React.FC<AppbarProps> = () => {
     const setAuthModalState = useSetRecoilState(authModalState);
 
-    const handleClick = (type:"login"|"signup") => {
-        setAuthModalState((prev) => ({ ...prev,type , isOpen: true}));
+    const handleClick = () => {
+        setAuthModalState((prev) => ({ ...prev, isOpen: true}));
     };
 
     return (
@@ -24,7 +24,7 @@ const Appbar: React.FC<AppbarProps> = () => {
             </Link>
             <div className="flex flex-row justify-center pt-2">
                 <div className="flex flex-col justify-center mr-4 h-full text-white">Hello, </div>
-                <button onClick={()=>handleClick("login")}>Login</button>
+                <button onClick={handleClick}>Login</button>
             </div>
         </div>
     );

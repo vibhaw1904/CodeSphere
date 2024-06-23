@@ -17,15 +17,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-  
-   <html lang="en">
+    <RecoilRoot>
+         <html lang="en">
 
-      <body className={inter.className}>
-      <RecoilRoot>
-        <Appbar/>
-        {children}
-    </RecoilRoot></body>
-    </html>
+<body className={inter.className}>
+
+  <Appbar/>
+  {children}
+</body>
+</html>
+    </RecoilRoot>
+
       
    
   );
