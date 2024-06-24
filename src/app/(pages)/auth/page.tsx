@@ -1,27 +1,25 @@
-
-"use client";
-
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+"use client"
 import { authModalState } from '@/atoms/authModalAtom';
-import Signin from '@/components/signin';
-import Signup from '@/components/signup';
-import React from 'react';
+import AuthPage from '@/components/AuthPage';
+import { auth } from '@/firebase/firebase';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRecoilValue } from 'recoil';
 
-type PageProps = {};
-
-const LoginPage: React.FC<PageProps> = () => {
-    const authModal = useRecoilValue(authModalState);
-    const setAuthModalState = useSetRecoilState(authModalState);
-
-  
-
-    return (
-        <>
-           
-                        {authModal.type === "login" ? <Signin /> : <Signup />}
-                
-        </>
-    );
+type pageProps = {
+    
 };
 
-export default LoginPage;
+const Loginpage:React.FC<pageProps> = () => {
+    const router=useRouter()
+    const authmodal=useRecoilValue(authModalState);
+    const[user,loading,error]=useAuthState(auth);
+    useEffect(()=>{
+        if(user)router.push('/');
+    },[user,router])
+    return <div>
+        {authmodal.isOpen&&<AuthPage/>}
+    </div>
+}
+export default Loginpage;
