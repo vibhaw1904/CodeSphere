@@ -1,7 +1,7 @@
-// components/ProblemTable.tsx
+"use client"
 import Link from "next/link";
 import React from "react";
-
+import { BsCheckCircle } from "react-icons/bs";
 type Problem = {
   id: string;
   title: string;
@@ -19,6 +19,8 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ problems }) => {
     <table className="min-w-full bg-gray-900">
       <thead>
         <tr>
+        <th className="px-4 py-2 text-left text-gray-500">Status</th>
+
           <th className="px-4 py-2 text-left text-gray-500">Title</th>
           <th className="px-4 py-2 text-left text-gray-500">Difficulty</th>
           <th className="px-4 py-2 text-left text-gray-500">Category</th>
@@ -37,6 +39,8 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ problems }) => {
               className={`${idx % 2 === 1 ? "bg-gray-800" : ""}`}
               key={problem.id}
             >
+              <td className="px-4 ml-3 py-4 text-green-500 font-medium whitespace-nowrap">              <th><BsCheckCircle fontSize={"18"} width={'18'}/></th>
+              </td>
               <td className="px-4 py-2">
                 {problem.link ? (
                   <Link

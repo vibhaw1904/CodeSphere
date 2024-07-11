@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { problems } from "@/Problems/problem"; // Import your problems data
 import ProblemTable from "./ProblemTable";
