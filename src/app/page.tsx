@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <main>
-    <TopBar/>
+    {/* <TopBar/> */}
     <ProblemCard/>
     </main>
   );

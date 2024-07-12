@@ -4,6 +4,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Appbar from "@/components/Appbar";
 import { RecoilRoot } from "recoil";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import TopBar from "@/components/TopBar";
+
 const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
@@ -23,8 +27,13 @@ export default function RootLayout({
 <body className={inter.className}>
 
   {/* <Appbar/> */}
+  <TopBar/>
   {children}
+ 
+  <ToastContainer /> 
+
 </body>
+
 </html>
     </RecoilRoot>
 

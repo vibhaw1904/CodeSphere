@@ -6,7 +6,7 @@ export default function Layout({
 }): JSX.Element {
   return (
     <div >
-        <Appbar/>
+        {/* <Appbar/> */}
             {children}
     </div>
   );

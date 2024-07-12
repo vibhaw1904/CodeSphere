@@ -16,7 +16,7 @@ type ProblemsTableProps = {
 
 const ProblemsTable: React.FC<ProblemsTableProps> = ({ problems }) => {
   return (
-    <table className="min-w-full bg-gray-900">
+    <table className="min-w-full bg-white/5 ">
       <thead>
         <tr>
         <th className="px-4 py-2 text-left text-gray-500">Status</th>
@@ -53,7 +53,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ problems }) => {
                 ) : (
                   <Link
                     className="hover:text-blue-600 cursor-pointer"
-                    href={`/problems/${problem.id}`}
+                    href={`/pracproblems/${problem.id}`}
                   >
                     {problem.title}
                   </Link>
