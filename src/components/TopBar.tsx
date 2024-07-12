@@ -12,6 +12,7 @@ import Logout from "./Buttons/Logout";
 import { usePathname } from "next/navigation";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { BsList } from "react-icons/bs";
+import Timer from "./Timer";
 
 type TopBarProps = {};
 
@@ -34,6 +35,9 @@ const TopBar: React.FC<TopBarProps> = () => {
         </div>
       </Link>
       {problemPage && (
+        <div className="flex">
+
+        
 					<div className='flex items-center gap-4 flex-1 justify-center rounded-md bg-gray-700 max-w-56 backdrop-blur-md'>
 						<div
 							className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer'
@@ -56,8 +60,13 @@ const TopBar: React.FC<TopBarProps> = () => {
 						>
 							<FaChevronRight />
 						</div>
+            
 					</div>
+          <Timer/>
+          </div>
+
 				)}
+        
       <div className="flex flex-row justify-center pt-2 items-center">
         <div className="flex flex-col justify-center mr-4 h-full text-white items-center">
           Hello,
