@@ -29,13 +29,13 @@ const Nav:React.FC<NavProps> = ({language,setLanguage}) => {
     <div>
     <div className='ml-auto flex items-center space-x-4'>
 					<button
-						className='px-3 py-1.5 text-sm font-medium items-center whitespace-nowrap transition-all focus:outline-none inline-flex bg-dark-fill-3  hover:bg-dark-fill-2 text-dark-label-2 rounded-lg'
+						className='px-3 py-1.5 text-sm font-medium items-center whitespace-nowrap transition-all focus:outline-none inline-flex bg-white/5  hover:bg-white/10 backdrop-blur-md text-white/60 rounded-lg'
 						// onClick={handleSubmit}
 					>
 						Run
 					</button>
 					<button
-						className='px-3 py-1.5 font-medium items-center transition-all focus:outline-none inline-flex text-sm text-white bg-dark-green-s hover:bg-green-3 rounded-lg'
+						className='px-3 py-1.5 font-medium items-center transition-all focus:outline-none inline-flex text-sm text-white bg-green-600 hover:bg-green-700 backdrop-blur-md rounded-lg'
 						// onClick={handleSubmit}
 					>
 						Submit
