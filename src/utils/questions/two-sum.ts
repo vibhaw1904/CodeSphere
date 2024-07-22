@@ -1,26 +1,8 @@
 import assert  from "assert";
 import { log } from "console";
+import { Problem } from "../types/problem";
 
 
-export type Example={
-    id:number;
-    inputText:string;
-    outputText:string;
-    explanation?:string;
-    img?:string;
-}
-export type Problem={
-    id:string;
-    title:string;
-    problemStatement:string;
-    example:Example[];
-    constraints:string;
-    order:number;
-    starterCode:string;
-    handlerFunction:((fn:any)=>boolean)|string;
-    starterFunctions:string
-
-}
 
 const handlerTwoSum=(fn:any)=>{
     try {
@@ -95,5 +77,5 @@ export const twoSum: Problem = {
 	handlerFunction: handlerTwoSum,
 	starterCode: starterCodeTwoSum,
 	order: 1,
-	starterFunctionName: "function twoSum(",
+	starterFunctions: "function twoSum(",
 };
