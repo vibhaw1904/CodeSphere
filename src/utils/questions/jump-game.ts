@@ -22,7 +22,9 @@ export const jumpGameHandler=(fn:any)=>{
     }
 }
 
-const starterCodeJumpGameJs=``
+const starterCodeJumpGameJs=`function reverseList(head: ListNode | null): ListNode | null {
+// write your code here
+}`
 
 
 export const jumpGame: Problem = {
@@ -54,8 +56,8 @@ export const jumpGame: Problem = {
 	],
 	constraints: `<li class='mt-2'><code>1 <= nums.length <= 10^4</code></li>
     <li class='mt-2'><code>0 <= nums[i] <= 10^5</code></li>`,
-	starterCode: starterCodeJumpGameJS,
+	starterCode: starterCodeJumpGameJs,
 	handlerFunction: jumpGameHandler,
-	starterFunctionName: "function canJump(",
+	starterFunctions: "function canJump(",
 	order: 3,
 };

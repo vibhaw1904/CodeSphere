@@ -1,37 +1,14 @@
+import { Problem } from '@/utils/types/problem';
 import React from 'react';
 import { AiFillDislike, AiFillLike } from 'react-icons/ai';
 import { BsCheck2Circle } from 'react-icons/bs';
 
-type ProblemDescriptionProps = {};
+type ProblemDescriptionProps = {
+    problem:Problem
+};
 
-const ProblemDescription: React.FC<ProblemDescriptionProps> = () => {
-    const problemStatement = `
-        <p class="text-white">Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.</p>
-        <p class="text-white">You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
-        <p class="text-white">You can return the answer in any order.</p>
-    `;
-
-    const examples = [
-        {
-            id: 1,
-            inputText: 'nums = [2, 7, 11, 15], target = 9',
-            outputText: '[0, 1]',
-            explanation: 'Because nums[0] + nums[1] == 9, we return [0, 1].',
-        },
-        {
-            id: 2,
-            inputText: 'nums = [3, 2, 4], target = 6',
-            outputText: '[1, 2]',
-            explanation: 'Because nums[1] + nums[2] == 6, we return [1, 2].',
-        },
-    ];
-
-    const constraints = `
-        <li><code>2 <= nums.length <= 10^4</code></li>
-        <li><code>-10^9 <= nums[i] <= 10^9</code></li>
-        <li><code>-10^9 <= target <= 10^9</code></li>
-        <li>Only one valid answer exists.</li>
-    `;
+const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
+   
 
     return (
         <div className="bg-dark-layer-1">
@@ -46,7 +23,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = () => {
                 <div className="px-5">
                     <div className="w-full">
                         <div className="flex space-x-4">
-                            <div className="flex-1 mr-2 text-lg text-white font-medium">Two Sum</div>
+                            <div className="flex-1 mr-2 text-lg text-white font-medium">{problem?.title}</div>
                         </div>
                         <div className="flex items-center mt-3">
                             <div className="inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize">
@@ -63,12 +40,12 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = () => {
                         </div>
 
                         <div className="text-white text-sm mt-4">
-                            <div dangerouslySetInnerHTML={{ __html: problemStatement }} />
+                            <div dangerouslySetInnerHTML={{ __html: problem.problemStatement }} />
                         </div>
 
                         {/* Examples */}
                         <div className="mt-4">
-                            {examples.map((example, index) => (
+                            {problem.examples.map((example, index) => (
                                 <div key={example.id}>
                                     <p className="font-medium text-white">Example {index + 1}:</p>
                                     <div className="example-card bg-dark-layer-3 p-3 rounded-md mt-2">
@@ -91,7 +68,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = () => {
                         <div className="my-8 pb-4">
                             <div className="text-white text-sm font-medium">Constraints:</div>
                             <ul className="text-white ml-5 list-disc">
-                                <div dangerouslySetInnerHTML={{ __html: constraints }} />
+                                <div dangerouslySetInnerHTML={{ __html: problem.constraints }} />
                             </ul>
                         </div>
                     </div>

@@ -62,7 +62,7 @@ const PlayGround: React.FC<PlayGroundProps> = ({
             }}
           />
         </div>
-        <div className=" p-2 w-full">
+        <div className=" p-2 w-full h-[calc(100vh-94px)] overflow-y-auto">
           <div className="flex h-10 space-x-6 items-center">
             <div className="relative flex    flex-col justify-center cursor-pointer">
               <div className="text-white   text-sm font-medium leading-5">
