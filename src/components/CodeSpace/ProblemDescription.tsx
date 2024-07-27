@@ -48,6 +48,9 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
                             {problem.examples.map((example, index) => (
                                 <div key={example.id}>
                                     <p className="font-medium text-white">Example {index + 1}:</p>
+                                    {example.img&&<>
+                                    <img src={example.img} alt="example" className='mt-2'/>
+                                    </>}
                                     <div className="example-card bg-dark-layer-3 p-3 rounded-md mt-2">
                                         <pre>
                                             <strong className="text-white">Input: </strong>{example.inputText}

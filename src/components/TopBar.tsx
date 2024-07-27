@@ -4,7 +4,7 @@
 import { authModalState } from "@/atoms/authModalAtom";
 import { auth } from "@/firebase/firebase";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
 import { BiSolidLeftArrow, BiSolidRightArrow, BiSolidUser } from "react-icons/bi";
@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { BsList } from "react-icons/bs";
 import Timer from "./Timer";
+import AddProblem from "./Forms/AddProblem";
 
 type TopBarProps = {};
 
@@ -21,7 +22,28 @@ const TopBar: React.FC<TopBarProps> = () => {
   const problemPage = pathname.startsWith('/pracproblems'); 
   const setAuthModalState = useSetRecoilState(authModalState);
   const [user] = useAuthState(auth);
+  const[showAddProblem,setShowAddProblem]=useState(false);
+  const modalRef=useRef<HTMLDivElement>(null);
 
+  const handleAddProblemClick=()=>{
+    setShowAddProblem(true);
+  }
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      setShowAddProblem(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showAddProblem) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    } else {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [showAddProblem]);
   const handleClick = () => {
     setAuthModalState((prev) => ({ ...prev, isOpen: true, type: "login" }));
   };
@@ -68,6 +90,12 @@ const TopBar: React.FC<TopBarProps> = () => {
 				)}
         
       <div className="flex flex-row justify-center pt-2 items-center">
+      <button
+            onClick={handleAddProblemClick}
+            className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-300"
+          >
+            Add Problem
+          </button>
         <div className="flex flex-col justify-center mr-4 h-full text-white items-center">
           Hello,
         </div>
@@ -78,6 +106,7 @@ const TopBar: React.FC<TopBarProps> = () => {
         )}
         {user && (
           <div className="cursor-pointer group relative align-middle items-center flex mr-10">
+            
             <div className="flex h-8 w-8 rounded-full bg-gray-700 backdrop-blur-md items-center align-middle">
               <BiSolidUser className="ml-2" />
             </div>
@@ -93,6 +122,13 @@ const TopBar: React.FC<TopBarProps> = () => {
         {user && <Logout />}
       </div>
     </div>
+    {
+      showAddProblem && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div ref={modalRef} className="bg-gray-800 p-6 rounded-lg shadow-lg w-1/2">
+        <AddProblem />
+      </div>
+    </div>
+    }
     </nav>
    
   );

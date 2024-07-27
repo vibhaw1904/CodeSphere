@@ -13,7 +13,7 @@ const CodeSpace:React.FC<CodeSpaceProps> = ({problem}) => {
     
     return <Split className='split'>
         <ProblemDescription problem={problem}/>
-        <PlayGround language={language} setLanguage={setLanguage} value={code} onChange={setCode}/>
+        <PlayGround language={language} problem={problem} setLanguage={setLanguage} value={code} onChange={setCode}/>
     </Split>
 }
 export default CodeSpace;
