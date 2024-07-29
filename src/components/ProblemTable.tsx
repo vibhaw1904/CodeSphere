@@ -1,6 +1,9 @@
 "use client"
+import { firestore } from "@/firebase/firebase";
+import { log } from "console";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 type Problem = {
   id: string;
@@ -14,7 +17,10 @@ type ProblemsTableProps = {
   problems: Problem[];
 };
 
-const ProblemsTable: React.FC<ProblemsTableProps> = ({ problems }) => {
+const ProblemsTable: React.FC<ProblemsTableProps> = () => {
+
+  const problems=useGetProblems();
+  // console.log(problems)
   return (
     <table className="min-w-full bg-white/5 ">
       <thead>
@@ -72,3 +78,22 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ problems }) => {
 };
 
 export default ProblemsTable;
+
+function  useGetProblems(){
+  const [problems,setProblems]=useState([]);
+  useEffect(()=>{
+    const getProblems=async()=>{
+      const q=query(collection(firestore,"problems"),orderBy("order","asc"))
+      const querySnapshot = await getDocs(q);
+      const temp:any=[];   
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+       temp.push({id:doc.id,...doc.data()});
+       setProblems(temp)
+      });
+      
+     }
+    getProblems();
+  },[])
+  return problems;
+}
