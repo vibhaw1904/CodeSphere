@@ -90,12 +90,12 @@ const TopBar: React.FC<TopBarProps> = () => {
 				)}
         
       <div className="flex flex-row justify-center pt-2 items-center">
-      <button
+    {user &&   <button
             onClick={handleAddProblemClick}
             className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-300"
           >
             Add Problem
-          </button>
+          </button>}
         <div className="flex flex-col justify-center mr-4 h-full text-white items-center">
           Hello,
         </div>
