@@ -33,7 +33,7 @@ const ProblemsTable: React.FC = () => {
           const difficultyColor =
             problem.difficulty === "Easy"
               ? "text-green-500"
-              : problem.difficulty === "Medium" ||"medium"
+              : problem.difficulty === "Medium"
               ? "text-yellow-500"
               : "text-red-500";
           return (

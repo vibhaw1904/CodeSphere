@@ -1,5 +1,7 @@
-import { Problem } from '@/utils/types/problem';
-import React from 'react';
+import { firestore } from '@/firebase/firebase';
+import { DBProblem, Problem } from '@/utils/types/problem';
+import { doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { AiFillDislike, AiFillLike } from 'react-icons/ai';
 import { BsCheck2Circle } from 'react-icons/bs';
 
@@ -9,6 +11,7 @@ type ProblemDescriptionProps = {
 
 const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
    
+  const {currentProblem,difficultyClass,loading}=  useGetProblem(problem.id);
 
     return (
         <div className="bg-dark-layer-1">
@@ -23,19 +26,19 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
                 <div className="px-5">
                     <div className="w-full">
                         <div className="flex space-x-4">
-                            <div className="flex-1 mr-2 text-lg text-white font-medium">{problem?.title}</div>
+                            <div className="flex-1 mr-2 text-lg text-white font-medium">{currentProblem?.title}</div>
                         </div>
                         <div className="flex items-center mt-3">
-                            <div className="inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize">
-                                easy
+                            <div className={`inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize ${difficultyClass}`}>
+                                {currentProblem?.difficulty}
                             </div>
                             <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
                                 <AiFillLike className="text-dark-blue-s" />
-                                <span className="text-xs">3</span>
+                                <span className="text-xs">{currentProblem?.likes}</span>
                             </div>
                             <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
                                 <AiFillDislike className="text-dark-blue-s" />
-                                <span className="text-xs">3</span>
+                                <span className="text-xs">{currentProblem?.dislikes}</span>
                             </div>
                         </div>
 
@@ -82,3 +85,30 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
 };
 
 export default ProblemDescription;
+
+
+function useGetProblem(problemId:string){
+    const [currentProblem,setCurrentProblem]=useState<DBProblem | null>(null);
+    const[loading,setLoading]=useState<boolean>(true)
+     const [difficultyClass,setDifficultyClass]=useState<string>("");
+    useEffect(()=>{
+        const getCurrentProb=async()=>{
+            setLoading(true);
+            const docref=doc(firestore,"problems",problemId);
+            const docSnap=await getDoc(docref);
+            if(docSnap.exists()){
+                setLoading(false);
+          const problem=docSnap.data();
+setCurrentProblem({id:docSnap.id,...problem} as DBProblem);
+
+setDifficultyClass(
+    problem.difficulty==="Easy"?"bg-olive text-olive":problem.difficulty==="Medium"?"bg-dark-yellow text-dark-yellow":
+    "bg-red-500 text-red-500"
+)
+            }
+        }
+
+        getCurrentProb();
+    },[problemId])
+    return {loading,currentProblem,difficultyClass}
+}
