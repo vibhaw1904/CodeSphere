@@ -1,7 +1,9 @@
-import { firestore } from '@/firebase/firebase';
+import { auth, firestore } from '@/firebase/firebase';
+import { problems } from '@/Problems/problem';
 import { DBProblem, Problem } from '@/utils/types/problem';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { AiFillDislike, AiFillLike } from 'react-icons/ai';
 import { BsCheck2Circle } from 'react-icons/bs';
 
@@ -12,7 +14,7 @@ type ProblemDescriptionProps = {
 const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
    
   const {currentProblem,difficultyClass,loading}=  useGetProblem(problem.id);
-
+    const {liked,disliked,solved}=useUserSpecificData(problem.id)
     return (
         <div className="bg-dark-layer-1">
             {/* TAB */}
@@ -33,11 +35,15 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
                                 {currentProblem?.difficulty}
                             </div>
                             <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
-                                <AiFillLike className="text-dark-blue-s" />
+                                {liked && <AiFillLike className="text-blue-500" />}
+                                {!liked &&<AiFillLike  />}
                                 <span className="text-xs">{currentProblem?.likes}</span>
                             </div>
                             <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
-                                <AiFillDislike className="text-dark-blue-s" />
+                            {disliked&&  <AiFillDislike className="text-blue-500" />
+                            }
+                            {!disliked && <AiFillDislike  />
+                            }
                                 <span className="text-xs">{currentProblem?.dislikes}</span>
                             </div>
                         </div>
@@ -111,4 +117,28 @@ setDifficultyClass(
         getCurrentProb();
     },[problemId])
     return {loading,currentProblem,difficultyClass}
+}
+
+function useUserSpecificData(problemId:string){
+    const [data,setData]=useState({liked:false,disliked:false,solved:false})
+    const [user]=useAuthState(auth)
+    useEffect(()=>{
+        const getUserData=async()=>{
+            const docRef=doc(firestore,"users",user!.uid)
+            const userSnap=await getDoc(docRef);
+            if(userSnap.exists()){
+                const data=userSnap.data();
+                const{solvedProblem,likedProblem,dislikedProblem}=data;
+                setData({
+                    solved:solvedProblem.includes(problemId),
+                    liked:likedProblem.includes(problemId),
+                    disliked:dislikedProblem.includes(problemId)
+                })
+            }
+
+        }
+        if(user)getUserData();
+        return ()=>setData({liked:false,disliked:false,solved:false})
+    },[problemId,user])
+    return {...data,setData}
 }
