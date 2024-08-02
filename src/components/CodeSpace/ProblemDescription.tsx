@@ -12,9 +12,17 @@ type ProblemDescriptionProps = {
 };
 
 const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
+   const [likedProblem,setLikedProblem]=useState<boolean>(false);
+
    
   const {currentProblem,difficultyClass,loading}=  useGetProblem(problem.id);
-    const {liked,disliked,solved}=useUserSpecificData(problem.id)
+    const {liked,solved}=useUserSpecificData(problem.id)
+
+    const handleLikedProblem=()=>{
+        setLikedProblem(!likedProblem)
+    }
+    
+
     return (
         <div className="bg-dark-layer-1">
             {/* TAB */}
@@ -35,17 +43,11 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
                                 {currentProblem?.difficulty}
                             </div>
                             <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
-                                {liked && <AiFillLike className="text-blue-500" />}
-                                {!liked &&<AiFillLike  />}
+                                {liked && <AiFillLike className="text-blue-500" onClick={handleLikedProblem}  />}
+                                {!likedProblem &&<AiFillLike onClick={handleLikedProblem} />}
                                 <span className="text-xs">{currentProblem?.likes}</span>
                             </div>
-                            <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
-                            {disliked&&  <AiFillDislike className="text-blue-500" />
-                            }
-                            {!disliked && <AiFillDislike  />
-                            }
-                                <span className="text-xs">{currentProblem?.dislikes}</span>
-                            </div>
+                           
                         </div>
 
                         <div className="text-white text-sm mt-4">
@@ -120,7 +122,7 @@ setDifficultyClass(
 }
 
 function useUserSpecificData(problemId:string){
-    const [data,setData]=useState({liked:false,disliked:false,solved:false})
+    const [data,setData]=useState({liked:false,solved:false})
     const [user]=useAuthState(auth)
     useEffect(()=>{
         const getUserData=async()=>{
@@ -132,13 +134,13 @@ function useUserSpecificData(problemId:string){
                 setData({
                     solved:solvedProblem.includes(problemId),
                     liked:likedProblem.includes(problemId),
-                    disliked:dislikedProblem.includes(problemId)
+                    
                 })
             }
 
         }
         if(user)getUserData();
-        return ()=>setData({liked:false,disliked:false,solved:false})
+        return ()=>setData({liked:false,solved:false})
     },[problemId,user])
     return {...data,setData}
 }
