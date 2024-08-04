@@ -6,20 +6,23 @@ import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { AiFillDislike, AiFillLike } from 'react-icons/ai';
 import { BsCheck2Circle } from 'react-icons/bs';
+import { toast } from 'react-toastify';
 
 type ProblemDescriptionProps = {
     problem:Problem
 };
 
 const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
-   const [likedProblem,setLikedProblem]=useState<boolean>(false);
+//    const [likedProblem,setLikedProblem]=useState<boolean>(false);
 
    
   const {currentProblem,difficultyClass,loading}=  useGetProblem(problem.id);
     const {liked,solved}=useUserSpecificData(problem.id)
-
-    const handleLikedProblem=()=>{
-        setLikedProblem(!likedProblem)
+    const [user]=useAuthState(auth)
+    const handleLikedProblem=async()=>{
+        if(!user){
+            toast.error("you must be logged in",{position:"top-left"})
+        }
     }
     
 
@@ -42,9 +45,14 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
                             <div className={`inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize ${difficultyClass}`}>
                                 {currentProblem?.difficulty}
                             </div>
+                            {(solved ) && (
+									<div className='rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500 '>
+										<BsCheck2Circle />
+									</div>
+								)}
                             <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
-                                {liked && <AiFillLike className="text-blue-500" onClick={handleLikedProblem}  />}
-                                {!likedProblem &&<AiFillLike onClick={handleLikedProblem} />}
+                                {/* {liked && <AiFillLike className="text-blue-500" onClick={handleLikedProblem}  />} */}
+                                {<AiFillLike onClick={handleLikedProblem} />}
                                 <span className="text-xs">{currentProblem?.likes}</span>
                             </div>
                            

@@ -30,9 +30,9 @@ const handlerTwoSum=(fn:any)=>{
            
     }
 }
-const starterCodeTwoSum=`vector<int>TwoSum(vector<int>nums,int target){
-//write your code here
-}`
+const starterCodeTwoSum= `function twoSum(nums,target){
+	// Write your code here
+  };`;
 export const twoSum: Problem = {
 	id: "two-sum",
 	title: "1. Two Sum",

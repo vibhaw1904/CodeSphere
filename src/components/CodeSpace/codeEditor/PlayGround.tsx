@@ -7,24 +7,25 @@ import { java } from "@codemirror/lang-java";
 import { cpp } from "@codemirror/lang-cpp";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import Split from "react-split";
-import Footer from "./Footer";
 import { Problem } from "@/utils/types/problem";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { questions } from "@/utils/questions";
 
 type PlayGroundProps = {
   language: string;
   value: string;
-  problem:Problem;
+  problem: Problem;
   setLanguage: (lang: string) => void;
-  onChange: (value: string) => void;
 };
 
 const PlayGround: React.FC<PlayGroundProps> = ({
   language,
   value,
   problem,
-  onChange,
   setLanguage,
-
 }) => {
   const getLanguageExtension = () => {
     switch (language) {
@@ -37,13 +38,84 @@ const PlayGround: React.FC<PlayGroundProps> = ({
       case "cpp":
         return cpp();
       default:
-        return cpp();
+        return javascript();
     }
   };
-  const[activeIndex,setActiveIndex]=useState<number>(0);
+
+  const onChange = (value: string) => {
+    setCode(value);
+  };
+
+  const [code, setCode] = useState<string>(problem.starterCode);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [user] = useAuthState(auth);
+  const router = useRouter();
+  const { id } = router;
+
+  const handleRun = async () => {
+    if (!user) {
+      toast.error("Login first to run your code", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "dark",
+      });
+      return;
+    }
+
+    try {
+      const cb = new Function(`return ${code}`)();
+      const result = questions[id as string].handlerFunction(cb);
+
+      if (result) {
+        toast.success("All test cases passed!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "dark",
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!user) {
+      toast.error("Login first to submit your code", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "dark",
+      });
+      return;
+    }
+
+    try {
+      const cb = new Function(`return ${code}`)();
+      const result = questions[id as string].handlerFunction(cb);
+
+      if (result) {
+        toast.success("Code submitted successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "dark",
+        });
+        
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "dark",
+      });
+    }
+  };
+
   return (
     <div>
-      <Nav language={language} setLanguage={setLanguage} />
+      <Nav language={language} setLanguage={setLanguage} onSubmit={handleSubmit} onRun={handleRun} />
       <Split
         className="h-[calc(100vh-94px)]"
         direction="vertical"
@@ -54,7 +126,7 @@ const PlayGround: React.FC<PlayGroundProps> = ({
           <CodeMirror
             value={problem.starterCode}
             extensions={[getLanguageExtension()]}
-            onChange={(value) => onChange(value)}
+            onChange={onChange}
             theme={vscodeDark}
             basicSetup={{
               lineNumbers: true,
@@ -66,41 +138,46 @@ const PlayGround: React.FC<PlayGroundProps> = ({
             }}
           />
         </div>
-        <div className=" p-2 w-full h-[calc(100vh-94px)] overflow-y-auto">
+        <div className="p-2 w-full h-[calc(100vh-94px)] overflow-y-auto">
           <div className="flex h-10 space-x-6 items-center">
-            <div className="relative flex    flex-col justify-center cursor-pointer">
-              <div className="text-white   text-sm font-medium leading-5">
+            <div className="relative flex flex-col justify-center cursor-pointer">
+              <div className="text-white text-sm font-medium leading-5">
                 Testcases
               </div>
-              <hr className="absolute bottom-0 h-0.5   w-[70px]   rounded-full border-none bg-white" />
+              <hr className="absolute bottom-0 h-0.5 w-[70px] rounded-full border-none bg-white" />
             </div>
           </div>
-          <div className="flex ">
-            {
-              problem.examples.map((example,index)=>(
-                <div className="mr-2 items-start mt-2  text-white" key={example.id}
-                onClick={()=>setActiveIndex(index)}
-                >
-                <div className="flex flex-wrap  items-center  gap-y-4 ">
-                  <div className={`font-medium items-center transition-all focus:outline-none inline-flex bg-white/5  hover:bg-white/10  relative rounded-lg px-4  py-1   cursor-pointer  whitespace-nowrap backdrop-blur-md ${activeIndex===index?'text-white':'text-gray-500'}`}>Case{index+1}</div>
+          <div className="flex">
+            {problem.examples.map((example, index) => (
+              <div
+                className="mr-2 items-start mt-2 text-white"
+                key={example.id}
+                onClick={() => setActiveIndex(index)}
+              >
+                <div className="flex flex-wrap items-center gap-y-4">
+                  <div
+                    className={`font-medium items-center transition-all focus:outline-none inline-flex bg-white/5 hover:bg-white/10 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap backdrop-blur-md ${
+                      activeIndex === index ? "text-white" : "text-gray-500"
+                    }`}
+                  >
+                    Case{index + 1}
+                  </div>
                 </div>
               </div>
-              ))
-            }
-        
-           
+            ))}
           </div>
           <div className="font-semibold my-4">
             <p className="text-white text-base">Input:</p>
-            <div className="font-medium items-center transition-all focus:outline-none  bg-white/5  hover:bg-white/10  relative rounded-lg px-4  py-1    whitespace-nowrap backdrop-blur-md p-2 ">{problem.examples[activeIndex].inputText}</div>
-            <p className="text-white text-base ">Output:</p>
-            <div className="font-medium items-center transition-all focus:outline-none  bg-white/5  hover:bg-white/10  relative rounded-lg px-4  py-1    whitespace-nowrap backdrop-blur-md p-2">{problem.examples[activeIndex].outputText}</div>
+            <div className="font-medium items-center transition-all focus:outline-none bg-white/5 hover:bg-white/10 relative rounded-lg px-4 py-1 whitespace-nowrap backdrop-blur-md p-2">
+              {problem.examples[activeIndex].inputText}
+            </div>
+            <p className="text-white text-base">Output:</p>
+            <div className="font-medium items-center transition-all focus:outline-none bg-white/5 hover:bg-white/10 relative rounded-lg px-4 py-1 whitespace-nowrap backdrop-blur-md p-2">
+              {problem.examples[activeIndex].outputText}
+            </div>
           </div>
-        
-
         </div>
       </Split>
-     
     </div>
   );
 };
