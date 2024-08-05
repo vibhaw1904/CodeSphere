@@ -56,7 +56,9 @@ const ProblemsTable: React.FC = () => {
                 ) : (
                   <Link
                     className="hover:text-blue-600 cursor-pointer"
-                    href={`/pracproblems/${problem.id}`}
+                    href={{pathname:`/pracproblems/${problem.id}`,
+                    query:{id:problem.id}
+                  }}
                   >
                     {problem.title}
                   </Link>

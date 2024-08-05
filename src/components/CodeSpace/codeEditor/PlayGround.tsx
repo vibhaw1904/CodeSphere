@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from "react";
 import Nav from "./Nav";
 import CodeMirror from "@uiw/react-codemirror";
@@ -11,19 +13,18 @@ import { Problem } from "@/utils/types/problem";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/firebase";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { questions } from "@/utils/questions";
+import { error } from "console";
 
 type PlayGroundProps = {
   language: string;
-  value: string;
   problem: Problem;
   setLanguage: (lang: string) => void;
 };
 
 const PlayGround: React.FC<PlayGroundProps> = ({
   language,
-  value,
   problem,
   setLanguage,
 }) => {
@@ -42,16 +43,21 @@ const PlayGround: React.FC<PlayGroundProps> = ({
     }
   };
 
+ 
+
+  let [code, setCode] = useState<string>(problem.starterCode);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [success,setSuccess]=useState<boolean>(false);
+  const [user] = useAuthState(auth);
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+console.log(id);
+
   const onChange = (value: string) => {
+    console.log(value);
+    
     setCode(value);
   };
-
-  const [code, setCode] = useState<string>(problem.starterCode);
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [user] = useAuthState(auth);
-  const router = useRouter();
-  const { id } = router;
-
   const handleRun = async () => {
     if (!user) {
       toast.error("Login first to run your code", {
@@ -63,17 +69,39 @@ const PlayGround: React.FC<PlayGroundProps> = ({
     }
 
     try {
-      const cb = new Function(`return ${code}`)();
-      const result = questions[id as string].handlerFunction(cb);
+      // const cb = new Function(`return ${code}`)();
+     
+      // const result = questions[id as string].handlerFunction(cb);
+      // console.log(result);
+      code = code.slice(code.indexOf(problem.starterFunctions));
+			const cb = new Function(`return ${code}`)();
+			const handler = questions[id as string].handlerFunction;
+      console.log(typeof(handler));
 
-      if (result) {
-        toast.success("All test cases passed!", {
+      if (typeof handler === "function"||"string") {
+        const result = handler(cb);
+        
+        if(result){console.log("result is:",result)
+          toast.success("All test cases passed!", {
+            position: "top-right",
+            autoClose: 3000,
+            theme: "dark",
+          });
+          setSuccess(true);
+        };
+        
+       
+      } else {
+      
+        
+        toast.error("Test cases failed.", {
           position: "top-right",
           autoClose: 3000,
           theme: "dark",
         });
       }
     } catch (error) {
+      console.log(error);
       toast.error(`Error: ${error.message}`, {
         position: "top-right",
         autoClose: 3000,
@@ -94,7 +122,7 @@ const PlayGround: React.FC<PlayGroundProps> = ({
 
     try {
       const cb = new Function(`return ${code}`)();
-      const result = questions[id as string].handlerFunction(cb);
+      const result = questions[id as string]?.handlerFunction(cb);
 
       if (result) {
         toast.success("Code submitted successfully!", {
@@ -102,7 +130,12 @@ const PlayGround: React.FC<PlayGroundProps> = ({
           autoClose: 3000,
           theme: "dark",
         });
-        
+      } else {
+        toast.error("Test cases failed.", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "dark",
+        });
       }
     } catch (error) {
       toast.error(`Error: ${error.message}`, {
@@ -124,9 +157,9 @@ const PlayGround: React.FC<PlayGroundProps> = ({
       >
         <div className="w-full overflow-auto">
           <CodeMirror
-            value={problem.starterCode}
-            extensions={[getLanguageExtension()]}
-            onChange={onChange}
+            value={code}
+            extensions={[javascript()]}
+            onChange={(value)=>onChange(value)}
             theme={vscodeDark}
             basicSetup={{
               lineNumbers: true,

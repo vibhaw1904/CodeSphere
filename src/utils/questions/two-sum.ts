@@ -1,5 +1,4 @@
 import assert  from "assert";
-import { log } from "console";
 import { Problem } from "../types/problem";
 
 
