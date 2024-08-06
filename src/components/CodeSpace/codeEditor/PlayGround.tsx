@@ -15,7 +15,7 @@ import { auth } from "@/firebase/firebase";
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import { questions } from "@/utils/questions";
-import { error } from "console";
+import  assert  from "assert";
 
 type PlayGroundProps = {
   language: string;
@@ -43,21 +43,19 @@ const PlayGround: React.FC<PlayGroundProps> = ({
     }
   };
 
- 
-
-  let [code, setCode] = useState<string>(problem.starterCode);
+  const [code, setCode] = useState<string>(problem.starterCode);
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [success,setSuccess]=useState<boolean>(false);
   const [user] = useAuthState(auth);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-console.log(id);
 
   const onChange = (value: string) => {
-    console.log(value);
+   
     
     setCode(value);
+    console.log(value);
   };
+
   const handleRun = async () => {
     if (!user) {
       toast.error("Login first to run your code", {
@@ -69,38 +67,38 @@ console.log(id);
     }
 
     try {
-      // const cb = new Function(`return ${code}`)();
-     
-      // const result = questions[id as string].handlerFunction(cb);
-      // console.log(result);
-      code = code.slice(code.indexOf(problem.starterFunctions));
-			const cb = new Function(`return ${code}`)();
-			const handler = questions[id as string].handlerFunction;
-      console.log(typeof(handler));
-
-      if (typeof handler === "function"||"string") {
-        const result = handler(cb);
-        
-        if(result){console.log("result is:",result)
-          toast.success("All test cases passed!", {
-            position: "top-right",
-            autoClose: 3000,
-            theme: "dark",
-          });
-          setSuccess(true);
-        };
-        
-       
-      } else {
+      const cb = new Function(`return ${code}`)();
+      console.log(typeof (cb));
       
-        
+      const question = questions[id as string];
+      console.log(question);
+      
+      // if (!question || typeof question.handlerFunction !== "function" ) {
+      //   throw new Error("Handler function not found or is not a function.");
+      // }
+      
+      
+      const handler = new Function(` return ${question.handlerFunction}`)();
+     
+      console.log(typeof handler);
+      
+      const result = handler(cb,assert);
+      console.log("Handler result:", result);
+
+      if (result) {
+        toast.success("All test cases passed!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      } else {
         toast.error("Test cases failed.", {
           position: "top-right",
           autoClose: 3000,
           theme: "dark",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       toast.error(`Error: ${error.message}`, {
         position: "top-right",
@@ -121,8 +119,16 @@ console.log(id);
     }
 
     try {
-      const cb = new Function(`return ${code}`)();
-      const result = questions[id as string]?.handlerFunction(cb);
+      const functionBody = code.slice(code.indexOf(problem.starterFunctions));
+      const cb = new Function(`return ${functionBody}`)();
+      
+      const question = questions[id as string];
+      if (!question || typeof question.handlerFunction !== "function") {
+        throw new Error("Handler function not found or is not a function.");
+      }
+
+      const handler = question.handlerFunction;
+      const result = handler(cb);
 
       if (result) {
         toast.success("Code submitted successfully!", {
@@ -137,7 +143,7 @@ console.log(id);
           theme: "dark",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(`Error: ${error.message}`, {
         position: "top-right",
         autoClose: 3000,
@@ -159,7 +165,7 @@ console.log(id);
           <CodeMirror
             value={code}
             extensions={[javascript()]}
-            onChange={(value)=>onChange(value)}
+            onChange={onChange}
             theme={vscodeDark}
             basicSetup={{
               lineNumbers: true,

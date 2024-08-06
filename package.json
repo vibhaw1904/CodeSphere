@@ -17,6 +17,7 @@
     "@uiw/codemirror-theme-vscode": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
     "assert": "^2.1.0",
+    "code-sphere": "file:",
     "firebase": "^10.12.2",
     "next": "14.2.4",
     "react": "^18",
