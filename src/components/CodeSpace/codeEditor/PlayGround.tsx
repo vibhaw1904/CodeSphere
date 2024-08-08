@@ -11,22 +11,26 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import Split from "react-split";
 import { Problem } from "@/utils/types/problem";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/firebase";
+import { auth, firestore } from "@/firebase/firebase";
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import { questions } from "@/utils/questions";
 import  assert  from "assert";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 type PlayGroundProps = {
   language: string;
   problem: Problem;
   setLanguage: (lang: string) => void;
+  setSolved: React.Dispatch<React.SetStateAction<boolean>>
+
 };
 
 const PlayGround: React.FC<PlayGroundProps> = ({
   language,
   problem,
   setLanguage,
+  setSolved
 }) => {
   const getLanguageExtension = () => {
     switch (language) {
@@ -117,26 +121,31 @@ const PlayGround: React.FC<PlayGroundProps> = ({
       });
       return;
     }
-
+  
     try {
       const functionBody = code.slice(code.indexOf(problem.starterFunctions));
       const cb = new Function(`return ${functionBody}`)();
-      
+  
       const question = questions[id as string];
       const handler = new Function(` return ${question.handlerFunction}`)();
-
-      // if (!question || typeof question.handlerFunction !== "function") {
-      //   throw new Error("Handler function not found or is not a function.");
-      // }
-
-      const result = handler(cb,assert);
-
+  
+      const result = handler(cb, assert);
+  
       if (result) {
         toast.success("Code submitted successfully!", {
           position: "top-right",
           autoClose: 3000,
           theme: "dark",
         });
+  
+        const userRef = doc(firestore, "users", user.uid);
+        console.log("User Ref:", userRef.path);
+  
+        await updateDoc(userRef, {
+          solvedProblems: arrayUnion(id),
+        });
+        setSolved(true);
+        console.log("Problem ID added to solvedProblems array:", id);
       } else {
         toast.error("Test cases failed.", {
           position: "top-right",
@@ -145,6 +154,7 @@ const PlayGround: React.FC<PlayGroundProps> = ({
         });
       }
     } catch (error: any) {
+      console.log("Error during submission:", error);
       toast.error(`Error: ${error.message}`, {
         position: "top-right",
         autoClose: 3000,
@@ -152,6 +162,7 @@ const PlayGround: React.FC<PlayGroundProps> = ({
       });
     }
   };
+  
 
   return (
     <div>

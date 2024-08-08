@@ -10,9 +10,10 @@ import { toast } from 'react-toastify';
 
 type ProblemDescriptionProps = {
     problem:Problem
+    _solved:boolean
 };
 
-const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
+const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem,_solved}) => {
 //    const [likedProblem,setLikedProblem]=useState<boolean>(false);
 
    
@@ -45,8 +46,8 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({problem}) => {
                             <div className={`inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize ${difficultyClass}`}>
                                 {currentProblem?.difficulty}
                             </div>
-                            {(solved ) && (
-									<div className='rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500 '>
+                            {(solved || _solved) && (
+									<div className='rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500'>
 										<BsCheck2Circle />
 									</div>
 								)}
@@ -138,9 +139,9 @@ function useUserSpecificData(problemId:string){
             const userSnap=await getDoc(docRef);
             if(userSnap.exists()){
                 const data=userSnap.data();
-                const{solvedProblem,likedProblem,dislikedProblem}=data;
+                const{solvedProblems,likedProblem}=data;
                 setData({
-                    solved:solvedProblem.includes(problemId),
+                    solved:solvedProblems.includes(problemId),
                     liked:likedProblem.includes(problemId),
                     
                 })

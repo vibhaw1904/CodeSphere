@@ -9,12 +9,12 @@ type CodeSpaceProps = {
 
 const CodeSpace:React.FC<CodeSpaceProps> = ({problem}) => {
     const[language,setLanguage]=useState<string>('cpp');
-    
+    const [solved,setSolved]=useState<boolean>(false);
    
    
     return <Split className='split'>
-        <ProblemDescription problem={problem}/>
-        <PlayGround language={language} problem={problem} setLanguage={setLanguage} />
+        <ProblemDescription problem={problem} _solved={solved}/>
+        <PlayGround language={language} problem={problem} setLanguage={setLanguage} setSolved={setSolved}/>
     </Split>
 }
 export default CodeSpace;
