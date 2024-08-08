@@ -123,12 +123,13 @@ const PlayGround: React.FC<PlayGroundProps> = ({
       const cb = new Function(`return ${functionBody}`)();
       
       const question = questions[id as string];
-      if (!question || typeof question.handlerFunction !== "function") {
-        throw new Error("Handler function not found or is not a function.");
-      }
+      const handler = new Function(` return ${question.handlerFunction}`)();
 
-      const handler = question.handlerFunction;
-      const result = handler(cb);
+      // if (!question || typeof question.handlerFunction !== "function") {
+      //   throw new Error("Handler function not found or is not a function.");
+      // }
+
+      const result = handler(cb,assert);
 
       if (result) {
         toast.success("Code submitted successfully!", {

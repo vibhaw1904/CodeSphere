@@ -25,7 +25,7 @@ class LinkedList {
 	}
 }
 
-export const reverseLinkedListHandler = (fn: any) => {
+export const reverseLinkedListHandler = (fn: any,assert:any) => {
 	try {
 		const tests = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1], [1, 2, 3], [1]];
 		const answers = [[5, 4, 3, 2, 1], [1, 2, 3, 4, 5], [3, 2, 1], [1]];

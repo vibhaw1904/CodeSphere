@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Problem } from "../types/problem";
 
-export const validParenthesesHandler = (fn: any) => {
+export const validParenthesesHandler = (fn: any,assert:any) => {
 	try {
 		const tests = ["()", "()[]{}", "(]", "([)]", "{[]}"];
 		const answers = [true, true, false, false, true];

@@ -3,7 +3,7 @@ import { Problem } from "../types/problem";
 import example1 from "./images/search-a-2d-1.jpg";
 import example2 from "./images/search-a-2d-2.jpg";
 
-export const search2DMatrixHandler = (fn: any) => {
+export const search2DMatrixHandler = (fn: any,assert:any) => {
 	try {
 		const tests = [
 			{

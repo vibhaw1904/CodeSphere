@@ -1,6 +1,6 @@
 import assert from "assert";
 import { Problem } from "../types/problem";
-export const jumpGameHandler=(fn:any)=>{
+export const jumpGameHandler=(fn:any,assert:any)=>{
 
     try {
         const tests=[
