@@ -4,7 +4,9 @@
 
 body {
   background-color: #101318;
-  background-image: linear-gradient(315deg, #343b45 0%, #3b3127 74%);
+  background-image: linear-gradient(315deg, #343b45 0%, #171410 74%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 /* RESET */

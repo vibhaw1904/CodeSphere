@@ -49,88 +49,72 @@ const TopBar: React.FC<TopBarProps> = () => {
   };
 
   return (
-    <nav className='relative flex h-[50px] w-full shrink-0 items-center justify-center px-5 bg-dark-layer-1 text-dark-gray-7 border-b-[1px] border-gray-300 '>
-			<div className={`flex w-full items-center justify-between ${!problemPage ? "max-w-[1200px] mx-auto" : ""}`}>
-      <Link href="/">
-        <div className="text-3xl flex flex-col justify-center font-bold text-blue-800">
-          CodeSphere
-        </div>
-      </Link>
-      {problemPage && (
-        <div className="flex">
-
-        
-					<div className='flex items-center gap-4 flex-1 justify-center rounded-md bg-gray-700 max-w-56 backdrop-blur-md'>
-						<div
-							className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer'
-						
-						>
-							<FaChevronLeft />
-						</div>
-						<Link
-							href='/'
-							className='flex items-center gap-2 font-medium max-w-[170px] text-dark-gray-8 cursor-pointer'
-						>
-							<div>
-								<BsList />
-							</div>
-							<p>Problem List</p>
-						</Link>
-						<div
-							className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer'
-							
-						>
-							<FaChevronRight />
-						</div>
-            
-					</div>
-          <Timer/>
+    <nav className='sticky top-0 z-40 w-full bg-gray-900 text-white shadow-md'>
+      <div className={`flex items-center justify-between h-16 px-4 mx-auto ${!problemPage ? "max-w-7xl" : ""}`}>
+        <Link href="/" className="flex items-center space-x-2">
+          <div className="text-3xl font-bold text-blue-500 hover:text-blue-400 transition-colors">
+            CodeSphere
           </div>
+        </Link>
 
-				)}
-        
-      <div className="flex flex-row justify-center pt-2 items-center">
-    {user &&   <button
-            onClick={handleAddProblemClick}
-            className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-300"
-          >
-            Add Problem
-          </button>}
-        <div className="flex flex-col justify-center mr-4 h-full text-white items-center">
-          Hello,
-        </div>
-        {!user && (
-          <Link href={"/auth"} onClick={handleClick}>
-            <button>Sign In</button>
-          </Link>
-        )}
-        {user && (
-          <div className="cursor-pointer group relative align-middle items-center flex mr-10">
-            
-            <div className="flex h-8 w-8 rounded-full bg-gray-700 backdrop-blur-md items-center align-middle">
-              <BiSolidUser className="ml-2" />
+        {problemPage && (
+          <div className="flex items-center space-x-4">
+            <div className='flex items-center space-x-2 bg-gray-800 rounded-lg p-2'>
+              <button className='p-2 rounded-full hover:bg-gray-700 transition-colors'>
+                <FaChevronLeft />
+              </button>
+              <Link href='/' className='flex items-center space-x-2 text-gray-300 hover:text-white transition-colors'>
+                <BsList />
+                <span className="hidden sm:inline">Problem List</span>
+              </Link>
+              <button className='p-2 rounded-full hover:bg-gray-700 transition-colors'>
+                <FaChevronRight />
+              </button>
             </div>
-            <div
+            <Timer />
+          </div>
+        )}
+        
+        <div className="flex items-center space-x-4">
+          {user && (
+            <button
+              onClick={() => setShowAddProblem(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Add Problem
+            </button>
+          )}
+          <div className="text-sm ">Hello, {user ? user.displayName : 'Guest'}</div>
+          {!user ?  (<Link href={"/auth"} onClick={handleClick}>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">Sign In</button>
+          </Link>) : (
+            <div className="flex items-center space-x-2">
+              <div className="flex relative group">
+                <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer mr-2 backdrop-blur-md">
+                  <BiSolidUser className="text-xl" />
+                </div>
+                <div
               className="absolute top-10 left-2/4 -translate-x-2/4 mx-auto bg-gray-400 text-brand-orange p-2 rounded shadow-lg 
                 z-40 group-hover:scale-100 scale-0 
                 transition-all duration-300 ease-in-out"
             >
               <p className="text-sm">{user.email}</p>
             </div>
+            <Logout/>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showAddProblem && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div ref={modalRef} className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <AddProblem />
           </div>
-        )}
-        {user && <Logout />}
-      </div>
-    </div>
-    {
-      showAddProblem && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div ref={modalRef} className="bg-gray-800 p-6 rounded-lg shadow-lg w-1/2">
-        <AddProblem />
-      </div>
-    </div>
-    }
+        </div>
+      )}
     </nav>
-   
   );
 };
 

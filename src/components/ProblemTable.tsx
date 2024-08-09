@@ -19,64 +19,69 @@ const ProblemsTable: React.FC = () => {
   const problems = useGetProblems();
 
   return (
-    <table className="min-w-full bg-white/5">
-      <thead>
-        <tr>
-          <th className="px-4 py-2 text-left text-gray-500">Status</th>
-          <th className="px-4 py-2 text-left text-gray-500">Title</th>
-          <th className="px-4 py-2 text-left text-gray-500">Difficulty</th>
-          <th className="px-4 py-2 text-left text-gray-500">Category</th>
-        </tr>
-      </thead>
-      <tbody className="text-white">
-        {problems.map((problem, idx) => {
-          const difficultyColor =
-            problem.difficulty === "Easy"
-              ? "text-green-500"
-              : problem.difficulty === "Medium"
-              ? "text-yellow-500"
-              : "text-red-500";
-          return (
-            <tr
-              className={`${idx % 2 === 1 ? "bg-gray-800" : ""}`}
-              key={problem.id}
-            >
-              <td className="px-4 ml-3 py-4 text-green-500 font-medium whitespace-nowrap">
-                <BsCheckCircle fontSize={"18"} width={"18"} />
-              </td>
-              <td className="px-4 py-2">
-                {problem.link ? (
-                  <Link
-                    href={problem.link}
-                    className="hover:text-blue-600 cursor-pointer"
-                    target="_blank"
-                  >
-                    {problem.title}
-                  </Link>
-                ) : (
-                  <Link
-                    className="hover:text-blue-600 cursor-pointer"
-                    href={{pathname:`/pracproblems/${problem.id}`,
-                    query:{id:problem.id}
-                  }}
-                  >
-                    {problem.title}
-                  </Link>
-                )}
-              </td>
-              <td className={`px-4 py-2 ${difficultyColor}`}>
-                {problem.difficulty}
-              </td>
-              <td className="px-4 py-2">{problem.category}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <div className="overflow-x-auto shadow-md rounded-lg">
+      <table className="min-w-full bg-gray-900 text-sm">
+        <thead className="bg-gray-800">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Title</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Difficulty</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Category</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-700">
+          {problems.map((problem, idx) => {
+            const difficultyColor =
+              problem.difficulty === "Easy"
+                ? "text-green-400"
+                : problem.difficulty === "Medium"
+                ? "text-yellow-400"
+                : "text-red-400";
+            return (
+              <tr
+                className={`${idx % 2 === 0 ? "bg-gray-900" : "bg-gray-800"} hover:bg-gray-700 transition-colors`}
+                key={problem.id}
+              >
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <BsCheckCircle className="text-green-400" size={18} />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {problem.link ? (
+                    <Link
+                      href={problem.link}
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
+                      target="_blank"
+                    >
+                      {problem.title}
+                    </Link>
+                  ) : (
+                    <Link
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
+                      href={{
+                        pathname: `/pracproblems/${problem.id}`,
+                        query: { id: problem.id }
+                      }}
+                    >
+                      {problem.title}
+                    </Link>
+                  )}
+                </td>
+                <td className={`px-6 py-4 whitespace-nowrap font-medium ${difficultyColor}`}>
+                  {problem.difficulty}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-300">{problem.category}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
 export default ProblemsTable;
+
+
 
 function useGetProblems(): Problem[] {
   const [problems, setProblems] = useState<DBProblem[]>([]);
