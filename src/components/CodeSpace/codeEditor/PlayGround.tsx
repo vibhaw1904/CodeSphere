@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
@@ -17,6 +17,9 @@ import { useSearchParams } from "next/navigation";
 import { questions } from "@/utils/questions";
 import  assert  from "assert";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { DiVim } from "react-icons/di";
+import { AiOutlineCheck } from "react-icons/ai";
+import { Bs0Circle, BsDot } from "react-icons/bs";
 
 type PlayGroundProps = {
   language: string;
@@ -49,15 +52,27 @@ const PlayGround: React.FC<PlayGroundProps> = ({
 
   const [code, setCode] = useState<string>(problem.starterCode);
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [testPass,setTestPass]=useState<boolean>(false);
+  const[accepted,setAccepted]=useState<boolean>(false);
   const [user] = useAuthState(auth);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+
+useEffect(()=>{
+const code=localStorage.getItem(`code-${id}`);
+if(user){
+  setCode(code?JSON.parse(code):problem.starterCode)
+}
+else{
+  setCode(problem.starterCode)
+}
+},[id,user,problem.starterCode])
 
   const onChange = (value: string) => {
    
     
     setCode(value);
-    console.log(value);
+    localStorage.setItem(`code-${id}`,JSON.stringify(value))
   };
 
   const handleRun = async () => {
@@ -95,6 +110,7 @@ const PlayGround: React.FC<PlayGroundProps> = ({
           autoClose: 3000,
           theme: "dark",
         });
+        setTestPass(true);
       } else {
         toast.error("Test cases failed.", {
           position: "top-right",
@@ -145,6 +161,7 @@ const PlayGround: React.FC<PlayGroundProps> = ({
           solvedProblems: arrayUnion(id),
         });
         setSolved(true);
+        setAccepted(true);
         console.log("Problem ID added to solvedProblems array:", id);
       } else {
         toast.error("Test cases failed.", {
@@ -197,6 +214,11 @@ const PlayGround: React.FC<PlayGroundProps> = ({
               </div>
               <hr className="absolute bottom-0 h-0.5 w-[70px] rounded-full border-none bg-white" />
             </div>
+           {
+            accepted&& <div className="text-green-500 font-medium ">
+            Accepted
+          </div>
+           }
           </div>
           <div className="flex">
             {problem.examples.map((example, index) => (
@@ -205,15 +227,22 @@ const PlayGround: React.FC<PlayGroundProps> = ({
                 key={example.id}
                 onClick={() => setActiveIndex(index)}
               >
-                <div className="flex flex-wrap items-center gap-y-4">
-                  <div
-                    className={`font-medium items-center transition-all focus:outline-none inline-flex bg-white/5 hover:bg-white/10 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap backdrop-blur-md ${
+                  <div className="flex flex-wrap items-center gap-y-4">
+                 {testPass ?( <div
+                    className={`font-medium items-center transition-all focus:outline-none inline-flex bg-white/5 hover:bg-white/10 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap backdrop-blur-md  ${
+                      activeIndex === index ? "text-green-500" : "text-green-500"
+                    }`}
+                  >
+                    <AiOutlineCheck /><BsDot/>
+                  </div>): <div
+                    className={`font-medium items-center transition-all focus:outline-none inline-flex bg-white/5 hover:bg-white/10 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap backdrop-blur-md  ${
                       activeIndex === index ? "text-white" : "text-gray-500"
                     }`}
                   >
-                    Case{index + 1}
-                  </div>
+                    case {index+1}
+                  </div>}
                 </div>
+             
               </div>
             ))}
           </div>
