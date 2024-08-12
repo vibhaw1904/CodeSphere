@@ -13,7 +13,7 @@ export type Problem={
     constraints:string;
     order:number;
     starterCode:string;
-	handlerFunction: ((fn: any) => boolean) ;
+	handlerFunction: ((fn: any,assert:any) => boolean) ;
     starterFunctions:string
 
 }

@@ -22,9 +22,13 @@ export const jumpGameHandler=(fn:any,assert:any)=>{
     }
 }
 
-const starterCodeJumpGameJs=`function reverseList(head: ListNode | null): ListNode | null {
-// write your code here
-}`
+const starterCodeJumpGameJs=`/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canJump = function(nums) {
+    
+};`
 
 
 export const jumpGame: Problem = {
