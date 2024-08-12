@@ -86,7 +86,9 @@ else{
     }
 
     try {
-      const cb = new Function(`return ${code}`)();
+      const functionBody = code.slice(code.indexOf(problem.starterFunctions));
+
+      const cb = new Function(`return ${functionBody}`)();
       console.log(typeof (cb));
       
       const question = questions[id as string];

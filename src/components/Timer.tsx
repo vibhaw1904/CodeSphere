@@ -31,7 +31,7 @@ const Timer: React.FC<TimerProps> = () => {
 	}, [showTimer]);
 
 	return (
-		<div className="rounded-md border-[1px] border-white/5 backdrop-blur ml-2 bg-gray-700 ">
+		<div className="rounded-md border-[1px] border-gray-800 backdrop-blur-md ml-2 hover:bg-gray-700 bg-gray-800 space-x-2 p-2  flex items-center">
 			{showTimer ? (
 				<div className='flex rounded-md items-center space-x-2 bg-dark-fill-3 p-1.5 cursor-pointer  hover:bg-dark-fill-2'>
 					<div>{formatTime(time)}</div>

@@ -8,7 +8,7 @@ type CodeSpaceProps = {
 };
 
 const CodeSpace:React.FC<CodeSpaceProps> = ({problem}) => {
-    const[language,setLanguage]=useState<string>('cpp');
+    const[language,setLanguage]=useState<string>('javascript');
     const [solved,setSolved]=useState<boolean>(false);
    
    
