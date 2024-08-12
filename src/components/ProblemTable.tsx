@@ -62,7 +62,7 @@ const ProblemsTable: React.FC = () => {
                 key={problem.id}
               >
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {solvedProblem.includes(problem.id) && (
+                  {solvedProblem?.includes(problem.id) && (
                     <BsCheckCircle className="text-green-400" size={18} />
                   )}{" "}
                 </td>

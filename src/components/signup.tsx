@@ -1,5 +1,6 @@
 "use client"
 import { authModalState } from '@/atoms/authModalAtom';
+import { updateProfile } from 'firebase/auth';
 import { auth, firestore } from '@/firebase/firebase';
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -34,10 +35,14 @@ const Signup:React.FC<signupProps> = () => {
             toast.loading("Creating",{position:"top-center",toastId:"loadingToast"})
             const newUser=await createUserWithEmailAndPassword(inputs.email, inputs.password)
             if(!newUser)return
+            await updateProfile(newUser.user, {
+                displayName: inputs.displayName,
+              });
+          
             const userData={
                 uid:newUser.user.uid,
                 email:newUser.user.email,
-                displayname:newUser.user.displayName,
+                displayName:inputs.displayName,
                 createdAt:Date.now(),
                 upadtedAt:Date.now(),
                 likedProblem:[],

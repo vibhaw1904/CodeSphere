@@ -21,8 +21,8 @@ const TopBar: React.FC<TopBarProps> = () => {
   const pathname = usePathname();
   const problemPage = pathname.startsWith('/pracproblems'); 
   const setAuthModalState = useSetRecoilState(authModalState);
-  const [user] = useAuthState(auth);
-  const[showAddProblem,setShowAddProblem]=useState(false);
+  const [user, loading, error] = useAuthState(auth); 
+    const[showAddProblem,setShowAddProblem]=useState(false);
   const modalRef=useRef<HTMLDivElement>(null);
 
   const handleAddProblemClick=()=>{
@@ -32,7 +32,9 @@ const TopBar: React.FC<TopBarProps> = () => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       setShowAddProblem(false);
     }
+    
   };
+
 
   useEffect(() => {
     if (showAddProblem) {
@@ -47,7 +49,17 @@ const TopBar: React.FC<TopBarProps> = () => {
   const handleClick = () => {
     setAuthModalState((prev) => ({ ...prev, isOpen: true, type: "login" }));
   };
-
+  useEffect(() => {
+    if (!loading && user) {
+      console.log("User email:", user.email);
+      console.log("User displayName:", user.displayName);
+    } else if (error) {
+      console.log("Error:", error);
+    } else {
+      console.log("Loading:", loading);
+    }
+  }, [user, loading, error]); // Add these dependencies
+  
   return (
     <nav className='sticky top-0 z-40 w-full bg-gray-900 text-white shadow-md'>
       <div className={`flex items-center justify-between h-16 px-4 mx-auto ${!problemPage ? "max-w-7xl" : ""}`}>
@@ -84,7 +96,7 @@ const TopBar: React.FC<TopBarProps> = () => {
               Add Problem
             </button>
           )}
-          <div className="text-sm ">Hello, {user ? user.displayName : 'Guest'}</div>
+          <div className="text-sm ">Hello, {user?.displayName ? user?.displayName : 'Guest'}</div>
           {!user ?  (<Link href={"/auth"} onClick={handleClick}>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">Sign In</button>
           </Link>) : (
