@@ -17,9 +17,8 @@ const AuthPage: React.FC<PageProps> = () => {
 
     return (
         <>
-           
-                        {authModal.type === "login" ? <Signin /> : <Signup />}
-                
+            {authModal.type === "login" ? <Signin /> : <Signup />}
+        
         </>
     );
 };

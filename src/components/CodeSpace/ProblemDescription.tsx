@@ -205,8 +205,8 @@ function useUserSpecificData(problemId: string) {
         const data = userSnap.data();
         const { solvedProblems, likedProblem } = data;
         setData({
-          solved: solvedProblems.includes(problemId),
-          liked: likedProblem.includes(problemId),
+          solved: solvedProblems?.includes(problemId),
+          liked: likedProblem?.includes(problemId),
         });
       }
     };
