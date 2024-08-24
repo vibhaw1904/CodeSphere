@@ -1,12 +1,10 @@
 import ProblemCard from "@/components/ProblemCard";
-import TopBar from "@/components/TopBar";
-import Image from "next/image";
 
-export default function Home() {
+
+export default function Page() {
   return (
-    <main>
-    {/* <TopBar/> */}
+    <div>
     <ProblemCard/>
-    </main>
+    </div>
   );
 }
