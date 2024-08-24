@@ -29,7 +29,7 @@ export const questions:questionMap     ={
     "container-with-most-water":containerWithMostWater,
     "maximum-depth-of-binary-tree":maxDepthBinaryTree,
     "merge-two-sorted-lists":mergeTwoSortedLists,
-    "palindrome-number":palindromeNumber,
+    "Palindrome-Number":palindromeNumber,
     "best-time-to-buy-sell-stock":bestTimeToBuySellStock,
     "binary-tree-inorder-traversal":binaryTreeInorderTraversal,
     "climbing-stairs":climbingStairs,

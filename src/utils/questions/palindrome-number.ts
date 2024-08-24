@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Problem } from "../types/problem";
 
-const starterCodePalindromeNumber = `function isPalindrome(x: number): boolean {
+const starterCodePalindromeNumber = `var isPalindrome = function(x) {
   // Write your code here
 };`;
 
