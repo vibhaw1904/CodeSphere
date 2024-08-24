@@ -4,12 +4,12 @@ import { authModalState } from "@/atoms/authModalAtom";
 import AuthPage from "@/components/AuthPage";
 import { auth } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, ElementType } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { FaCode, FaTrophy, FaHeart, FaComments } from "react-icons/fa";
 
-const Loginpage: React.FC = () => {
+const Page: React.FC = () => {
     const router = useRouter();
     const authModal = useRecoilValue(authModalState);
     const setAuthModalState = useSetRecoilState(authModalState);
@@ -54,21 +54,7 @@ const Loginpage: React.FC = () => {
 
     return (
         <div className="bg-gradient-to-b from-indigo-900 to-blue-900 min-h-screen text-white relative">
-            {/* Header */}
-            {/* <header className="container mx-auto px-4 py-8">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">CodeSphere</h1>
-                    <nav>
-                        <ul className="flex space-x-6">
-                            <li><a href="#features" className="hover:text-indigo-300">Features</a></li>
-                            <li><a href="#leaderboard" className="hover:text-indigo-300">Leaderboard</a></li>
-                            <li><button onClick={() => openAuthModal('login')} className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded">Sign In</button></li>
-                        </ul>
-                    </nav>
-                </div>
-            </header> */}
-
-            {/* Hero Section */}
+           
             <section className="container mx-auto px-4 py-20 text-center">
                 <h2 className="text-5xl font-bold mb-4">Master DSA with CodeSphere</h2>
                 <p className="text-xl mb-8">Elevate your coding skills, compete with peers, and join a thriving community of problem solvers.</p>
@@ -106,11 +92,17 @@ const Loginpage: React.FC = () => {
         </div>
     );
 }
-const FeatureCard = ({ icon, title, description }) => (
+export default Page;
+
+type FeatureCardProp={
+    icon:any;
+    title:string;
+    description:string;
+}
+const FeatureCard = ({ icon, title, description }:FeatureCardProp) => (
     <div className="bg-indigo-800 p-6 rounded-lg text-center items-center flex flex-col">
         <div className="text-4xl mb-4">{icon}</div>
         <h4 className="text-xl font-semibold mb-2">{title}</h4>
         <p>{description}</p>
     </div>
 );
-export default Loginpage;

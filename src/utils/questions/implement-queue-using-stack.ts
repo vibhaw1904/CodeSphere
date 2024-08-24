@@ -33,8 +33,8 @@ const handlerImplementQueueUsingStacks = (fn: any, assert: any) => {
 
     for (let i = 0; i < inputs.length; i++) {
       const instance = new fn();
-      const operations = inputs[i][0];
-      const values = inputs[i][1];
+      const operations = inputs[i][0] as string[];
+      const values = inputs[i][1] as any[];
       const result = [];
 
       for (let j = 0; j < operations.length; j++) {
@@ -58,9 +58,9 @@ const handlerImplementQueueUsingStacks = (fn: any, assert: any) => {
 export const implementQueueUsingStacks: Problem = {
   id: "implement-queue-using-stacks",
   title: "Implement Queue using Stacks",
-  problemStatement: `<p class='mt-3'>
-    Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (<code>push</code>, <code>pop</code>, <code>peek</code>, and <code>empty</code>).
-  </p>`,
+  problemStatement: `
+    Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (\`push\`, \`pop\`, \`peek\`, and \`empty\`).   
+  `,
   examples: [
     {
       id: 1,
@@ -75,12 +75,11 @@ export const implementQueueUsingStacks: Problem = {
       explanation: "The queue is empty."
     },
   ],
-  constraints: `<li class='mt-2'>
-    <code>1 ≤ x ≤ 9</code> (where <code>x</code> is the input for <code>push</code> function)
-  </li>
-  <li class='mt-2'>
-    The number of operations will be in the range <code>[1, 100]</code>.
-  </li>`,
+  constraints: `
+* \`1 ≤ x ≤ 9\` (where \`x\` is the input for \`push\` function)   
+
+* The number of operations will be in the range \`[1, 100]\`.   
+  `,
   handlerFunction: handlerImplementQueueUsingStacks,
   starterCode: starterCodeImplementQueueUsingStacks,
   order: 11,

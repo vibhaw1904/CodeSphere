@@ -12,12 +12,11 @@ const ProblemPage: React.FC = () => {
   const problem = questions[pid];
 
   if (!problem) {
-    notFound(); // If the problem doesn't exist, trigger a 404 page
-    return null; // Return null or some fallback UI to prevent further rendering
+    notFound(); 
+    return null; 
   }
 
-  problem.handlerFunction = problem.handlerFunction.toString();
-  console.log("probelms are",problem)
+ 
   return (
     <div className='text-white'>
       <CodeSpace problem={problem} />

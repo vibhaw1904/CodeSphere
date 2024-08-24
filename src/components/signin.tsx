@@ -46,11 +46,12 @@ const Signin = () => {
         setAuthModalState((prev) => ({ ...prev, isOpen: false }));
     };
 
-    if (!authModal.isOpen) return null;
+    // if (!authModal.isOpen) return null;
    
 useEffect(()=>{
     if(error) toast.error(error.message,{position:'top-center',autoClose:3000,theme:"dark"})
 },[error])
+if (!authModal.isOpen) return null;
     return ( <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className=" space-y-4 md:space-y-6 sm:p-8">
                     <div className='flex justify-end '>
@@ -82,8 +83,8 @@ useEffect(()=>{
                               {loading?'loading...':'Login'}
                             </button>
                             <button type="button" onClick={() => handleClick("signup")} className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                Don't have an account? <span className="font-medium text-primary-600 hover:underline dark:text-primary-500 text-blue-700">Create here</span>
-                            </button>
+                Don&apos;t have an account? <span className="font-medium text-primary-600 hover:underline dark:text-primary-500 text-blue-700">Create here</span>
+            </button>
                         </form>
                     </div>
                 </div>
