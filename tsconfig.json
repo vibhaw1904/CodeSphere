@@ -11,7 +11,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "incremental": true,
     "plugins": [
       {
