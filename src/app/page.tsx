@@ -1,10 +1,11 @@
 import ProblemCard from "@/components/ProblemCard";
 
 
-export default function Page() {
+const  Page=()=> {
   return (
     <div>
     <ProblemCard/>
     </div>
   );
 }
+export default Page;

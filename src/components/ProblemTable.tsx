@@ -5,15 +5,19 @@ import { DBProblem } from "@/utils/types/problem";
 import {
   collection,
   doc,
+  getCountFromServer,
   getDoc,
   getDocs,
+  limit,
   orderBy,
   query,
+  startAfter,
 } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BsCheckCircle } from "react-icons/bs";
+import { DiVim } from "react-icons/di";
 
 type Problem = {
   id: string;
@@ -21,13 +25,32 @@ type Problem = {
   difficulty: string;
   category: string;
   link?: string;
+
 };
 
 const ProblemsTable: React.FC = () => {
-  const problems = useGetProblems();
+  const [currentPage,setCurrentPage]=useState(1);
+  const pageSize=8;
+  const {problems,totalProblems} = useGetProblems(pageSize,currentPage);
   const solvedProblem = useGetSolvedProblems();
+  const totalPages = Math.ceil(totalProblems / pageSize);
   console.log("solved:",solvedProblem)
+
+  const handlePrev=()=>{
+    if(currentPage>1){
+      setCurrentPage(currentPage-1)
+    }
+  }
+  const handleNext=()=>{
+    if(currentPage<totalPages){
+      setCurrentPage(currentPage+1);
+    }
+  }
+
   return (
+    <div>
+
+   
     <div className="overflow-x-auto shadow-md rounded-lg">
       <table className="min-w-full bg-gray-900 text-sm">
         <thead className="bg-gray-800">
@@ -101,19 +124,40 @@ const ProblemsTable: React.FC = () => {
         </tbody>
       </table>
     </div>
+    <div className="mt-4 flex justify-between items-center">
+        <button 
+          onClick={handlePrev} 
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button 
+          onClick={handleNext} 
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
+    </div>
   );
 };
 
 export default ProblemsTable;
 
-function useGetProblems(): Problem[] {
+function useGetProblems(pageSize:number=10,page:number=1):  { problems: DBProblem[], totalProblems: number } {
   const [problems, setProblems] = useState<DBProblem[]>([]);
+  const[totalProblems,setTotalProblems]=useState(0);
 
   useEffect(() => {
     const getProblems = async () => {
       const q = query(
         collection(firestore, "problems"),
-        orderBy("order", "asc")
+        orderBy("order", "asc"),
+        limit(pageSize),
+        startAfter((page-1)*pageSize)
       );
       const querySnapshot = await getDocs(q);
       const temp: DBProblem[] = [];
@@ -121,11 +165,15 @@ function useGetProblems(): Problem[] {
         temp.push({ id: doc.id, ...doc.data() } as DBProblem);
       });
       setProblems(temp);
+      const countSnapShot=await getCountFromServer(collection(firestore,"problems"));
+    setTotalProblems(countSnapShot.data().count)
     };
-    getProblems();
-  }, []);
 
-  return problems;
+    
+    getProblems();
+  }, [pageSize,page]);
+
+  return {problems,totalProblems};
 }
 
 function useGetSolvedProblems() {
