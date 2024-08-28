@@ -19,7 +19,7 @@ const Page: React.FC = () => {
 
     useEffect(() => {
         if (user) {
-            router.push("/");
+            router.push("/dashboard");
         } else if (!loading) {
             setPageLoading(false);
         }

@@ -32,7 +32,7 @@ const Signin = () => {
         try {
         const userSigned=await signInWithEmailAndPassword(inputs.email, inputs.password)
         if(!userSigned)return
-        router.push('/')
+        router.push('/dashboard')
 
         } catch (error:any) {
             toast.error(error.message,{position:'top-center',autoClose:3000,theme:"dark"})
