@@ -147,7 +147,7 @@ else{
       const cb = new Function(`return ${functionBody}`)();
   
       const question = questions[id as string];
-      const handler = new Function(` return ${question.handlerFunction}`)();
+      const handler = new Function(`return ${question.handlerFunction}`)();
   
       const result = handler(cb, assert);
   
@@ -155,17 +155,30 @@ else{
         const userRef = doc(firestore, "users", user.uid);
         const userDoc = await getDoc(userRef);
         const userData = userDoc.data();
-        
-        if (!userData?.solvedProblems.includes(id)) {
+  
+        if (!userData) {
+          console.error("User data not found");
+          toast.error("Error: User data not found", {
+            position: "top-right",
+            autoClose: 3000,
+            theme: "dark",
+          });
+          return;
+        }
+  
+        const solvedProblems = userData.solvedProblems || [];
+        const currentPoints = userData.points || 0;
+  
+        if (!solvedProblems.includes(id)) {
           await updateDoc(userRef, {
             solvedProblems: arrayUnion(id),
             points: increment(5)
           });
           setShowReward(true);
-          setPoints(userData?.points + 5 || 5);
-          
+          setPoints(currentPoints + 5);
+  
           setTimeout(() => setShowReward(false), 3000);
-          
+  
           toast.success("Congratulations! You earned 5 points!", {
             position: "top-center",
             autoClose: 3000,
@@ -178,7 +191,7 @@ else{
             theme: "dark",
           });
         }
-        
+  
         setSolved(true);
         setAccepted(true);
       } else {
@@ -189,7 +202,7 @@ else{
         });
       }
     } catch (error: any) {
-      console.log("Error during submission:", error);
+      console.error("Error during submission:", error);
       toast.error(`Error: ${error.message}`, {
         position: "top-right",
         autoClose: 3000,
@@ -197,7 +210,6 @@ else{
       });
     }
   };
-
   
 
   return (
