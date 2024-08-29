@@ -1,10 +1,22 @@
-import ProblemCard from "@/components/ProblemCard";
+"use client"
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { app } from '../firebase/firebase'
+export default function Page() {
+  const router = useRouter();
+  const auth = getAuth(app);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push('/dashboard');
+      } 
+    });
 
-const  Page=()=> {
-  return (
-    <div>
-    </div>
-  );
+    return () => unsubscribe();
+  }, [router]);
+
+  // Return null or a loading indicator while checking auth state
+  return null;
 }
-export default Page;

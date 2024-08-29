@@ -16,11 +16,11 @@ import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import { questions } from "@/utils/questions";
 import  assert  from "assert";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, increment, updateDoc } from "firebase/firestore";
 import { DiVim } from "react-icons/di";
-import { AiOutlineCheck } from "react-icons/ai";
+import { AiFillTrophy, AiOutlineCheck } from "react-icons/ai";
 import { Bs0Circle, BsDot } from "react-icons/bs";
-
+import { motion } from "framer-motion";
 type PlayGroundProps = {
   language: string;
   problem: Problem;
@@ -54,6 +54,8 @@ const PlayGround: React.FC<PlayGroundProps> = ({
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [testPass,setTestPass]=useState<boolean>(false);
   const[accepted,setAccepted]=useState<boolean>(false);
+  const[points,setPoints]=useState(0);
+  const[showReward,setShowReward]=useState<boolean>(false);
   const [user] = useAuthState(auth);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -150,21 +152,35 @@ else{
       const result = handler(cb, assert);
   
       if (result) {
-        toast.success("Code submitted successfully!", {
-          position: "top-right",
-          autoClose: 3000,
-          theme: "dark",
-        });
-  
         const userRef = doc(firestore, "users", user.uid);
-        console.log("User Ref:", userRef.path);
-  
-        await updateDoc(userRef, {
-          solvedProblems: arrayUnion(id),
-        });
+        const userDoc = await getDoc(userRef);
+        const userData = userDoc.data();
+        
+        if (!userData?.solvedProblems.includes(id)) {
+          await updateDoc(userRef, {
+            solvedProblems: arrayUnion(id),
+            points: increment(5)
+          });
+          setShowReward(true);
+          setPoints(userData?.points + 5 || 5);
+          
+          setTimeout(() => setShowReward(false), 3000);
+          
+          toast.success("Congratulations! You earned 5 points!", {
+            position: "top-center",
+            autoClose: 3000,
+            theme: "dark",
+          });
+        } else {
+          toast.info("You've already solved this problem. No additional points awarded.", {
+            position: "top-center",
+            autoClose: 3000,
+            theme: "dark",
+          });
+        }
+        
         setSolved(true);
         setAccepted(true);
-        console.log("Problem ID added to solvedProblems array:", id);
       } else {
         toast.error("Test cases failed.", {
           position: "top-right",
@@ -181,6 +197,7 @@ else{
       });
     }
   };
+
   
 
   return (
@@ -216,11 +233,16 @@ else{
               </div>
               <hr className="absolute bottom-0 h-0.5 w-[70px] rounded-full border-none bg-white" />
             </div>
-           {
-            accepted&& <div className="text-green-500 font-medium ">
-            Accepted
-          </div>
-           }
+            {accepted && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-green-500 font-medium flex items-center"
+              >
+                <AiOutlineCheck className="mr-2" /> Accepted
+              </motion.div>
+            )}
           </div>
           <div className="flex">
             {problem.examples.map((example, index) => (
@@ -260,6 +282,19 @@ else{
           </div>
         </div>
       </Split>
+      {showReward && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white p-6 rounded-lg shadow-lg text-center"
+        >
+          <AiFillTrophy className="text-6xl mx-auto mb-4 text-yellow-300" />
+          <h2 className="text-2xl font-bold mb-2">Congratulations!</h2>
+          <p className="text-lg">You earned 5 points!</p>
+          <p className="text-sm mt-2">Total Points: {points}</p>
+        </motion.div>
+      )}
     </div>
   );
 };

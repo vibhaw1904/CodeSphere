@@ -21,7 +21,7 @@ import { motion } from "framer-motion";
 
 const ProblemsTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 8;
   const { problems, totalProblems } = useGetProblems(pageSize, currentPage);
   const solvedProblem = useGetSolvedProblems();
   const totalPages = Math.ceil(totalProblems / pageSize);
