@@ -43,10 +43,24 @@ const ProblemsTable: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full"
+      className="min-h-screen bg-gray-900 text-white p-4 sm:p-6 md:p-8"
     >
-      <div className="overflow-x-auto">
-        <table className="w-full bg-gray-800 text-sm rounded-lg overflow-hidden">
+      <motion.h1
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+        className="text-3xl font-bold mb-6 text-center text-blue-400"
+      >
+        Problem List
+      </motion.h1>   
+
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+      >
+        <table className="w-full">
           <thead className="bg-gray-700">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -126,7 +140,8 @@ const ProblemsTable: React.FC = () => {
             })}
           </tbody>
         </table>
-      </div>
+      </motion.div>
+
       <motion.div
         className="mt-6 flex justify-between items-center"
         initial={{ opacity: 0 }}
@@ -156,7 +171,6 @@ const ProblemsTable: React.FC = () => {
 };
 
 export default ProblemsTable;
-
 
 function useGetProblems(pageSize:number=10,page:number=1):  { problems: DBProblem[], totalProblems: number } {
   const [problems, setProblems] = useState<DBProblem[]>([]);

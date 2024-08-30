@@ -9,7 +9,7 @@ export default function Page() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
+      if (!user||user) {
         router.push('/dashboard');
       } 
     });

@@ -63,7 +63,7 @@ const TopBar: React.FC<TopBarProps> = () => {
   return (
     <nav className='sticky top-0 z-40 w-full bg-gray-900 text-white shadow-md'>
       <div className={`flex items-center justify-between h-16 px-4 mx-auto ${!problemPage ? "max-w-7xl" : ""}`}>
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/dashboard" className="flex items-center space-x-2">
           <div className="text-3xl font-bold text-blue-500 hover:text-blue-400 transition-colors">
             CodeSphere
           </div>
@@ -75,7 +75,7 @@ const TopBar: React.FC<TopBarProps> = () => {
               <button className='p-2 rounded-full hover:bg-gray-700 transition-colors'>
                 <FaChevronLeft />
               </button>
-              <Link href='/' className='flex items-center space-x-2 text-gray-300 hover:text-white transition-colors'>
+              <Link href='/dashboard' className='flex items-center space-x-2 text-gray-300 hover:text-white transition-colors'>
                 <BsList />
                 <span className="hidden sm:inline">Problem List</span>
               </Link>
