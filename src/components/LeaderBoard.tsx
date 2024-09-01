@@ -19,7 +19,7 @@ const Leaderboard: React.FC = () => {
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       const leadUsers = await getLeadUsers();
-      const formattedData = leadUsers.map((user, index) => ({
+      const formattedData = leadUsers.map((user:any, index:any) => ({
         rank: index + 1,
         username: user.displayName,
         score: user.points,

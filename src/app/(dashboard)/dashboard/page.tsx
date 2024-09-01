@@ -5,10 +5,10 @@ type pageProps = {
     
 };
 
-const page:React.FC<pageProps> = () => {
+const Page:React.FC<pageProps> = () => {
     
     return  <div>
       <ProblemsTable/>
     </div>
 }
-export default page;
+export default Page;
