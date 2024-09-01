@@ -1,3 +1,4 @@
+"use client"
 import { auth, firestore } from "@/firebase/firebase";
 import { problems } from "@/Problems/problem";
 import { DBProblem, Problem } from "@/utils/types/problem";

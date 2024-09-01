@@ -1,11 +1,9 @@
 import ProblemsTable from '@/components/ProblemTable';
 import React from 'react';
 
-type pageProps = {
-    
-};
 
-const Page:React.FC<pageProps> = () => {
+
+const Page = () => {
     
     return  <div>
       <ProblemsTable/>

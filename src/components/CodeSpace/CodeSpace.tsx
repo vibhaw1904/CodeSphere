@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import Split from 'react-split';
 import ProblemDescription from './ProblemDescription';

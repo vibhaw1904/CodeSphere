@@ -9,7 +9,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { FaCode, FaTrophy, FaHeart, FaComments } from "react-icons/fa";
 
-const Page: React.FC = () => {
+const Page = () => {
     const router = useRouter();
     const authModal = useRecoilValue(authModalState);
     const setAuthModalState = useSetRecoilState(authModalState);
