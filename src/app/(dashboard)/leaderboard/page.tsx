@@ -1,24 +1,13 @@
 "use client";
 
-import Leaderboard from '@/components/LeaderBoard';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import dynamic from 'next/dynamic';
+
+const Leaderboard = dynamic(() => import('@/components/LeaderBoard'), { ssr: false });
 
 const LeaderboardPage = () => {
-  const [windowWidth, setWindowWidth] = useState(0);
-
-
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            setWindowWidth(window.innerWidth);
-
-        }
-
-    }, []);
   return (
-    <div>
+    <div className="min-h-screen bg-gray-900">
       <Leaderboard />
     </div>
   );

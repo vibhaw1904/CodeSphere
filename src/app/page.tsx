@@ -21,17 +21,17 @@ export default function HomePage() {
         }
 
     }, []);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push('/dashboard');
-      } else {
-        router.push('/auth');
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       router.push('/dashboard');
+  //     } else {
+  //       router.push('/auth');
+  //     }
+  //   });
 
-    return () => unsubscribe();
-  }, [router, auth]);
+  //   return () => unsubscribe();
+  // }, [router, auth]);
   
   return <div>Loading...</div>; // Simple loading indicator
 }
