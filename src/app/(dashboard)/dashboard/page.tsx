@@ -1,12 +1,27 @@
+"use client";
+
 import ProblemsTable from '@/components/ProblemTable';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+const DashboardPage = () => {
+  const [windowWidth, setWindowWidth] = useState(0);
 
 
 
-const Page = () => {
-    
-    return  <div>
-      <ProblemsTable/>
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            setWindowWidth(window.innerWidth);
+
+        }
+
+    }, []);
+  return (
+    <div>
+      <ProblemsTable />
     </div>
-}
-export default Page;
+  );
+};
+
+export default DashboardPage;

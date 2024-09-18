@@ -1,11 +1,27 @@
+"use client";
+
 import Leaderboard from '@/components/LeaderBoard';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+const LeaderboardPage = () => {
+  const [windowWidth, setWindowWidth] = useState(0);
 
 
-const Page= () => {
-    
-    return <div>
-        <Leaderboard/>
+
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            setWindowWidth(window.innerWidth);
+
+        }
+
+    }, []);
+  return (
+    <div>
+      <Leaderboard />
     </div>
-}
-export default Page;
+  );
+};
+
+export default LeaderboardPage;

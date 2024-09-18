@@ -19,7 +19,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { BsCheckCircle } from "react-icons/bs";
 import { motion } from "framer-motion";
 
-const ProblemsTable: React.FC = () => {
+const ProblemsTable= () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
   const { problems, totalProblems } = useGetProblems(pageSize, currentPage);

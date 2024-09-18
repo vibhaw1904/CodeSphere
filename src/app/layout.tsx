@@ -9,7 +9,7 @@ import RecoilRootWrapper from "@/components/RecoilRootWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Your App Title",
+  title: "Codesphere",
   description: "Your app description",
 };
 

@@ -4,55 +4,69 @@ import { authModalState } from "@/atoms/authModalAtom";
 import AuthPage from "@/components/AuthPage";
 import { auth } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState, useRef, ElementType } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { FaCode, FaTrophy, FaHeart, FaComments } from "react-icons/fa";
+import { motion } from 'framer-motion';
+const Auth = () => {
+  const router = useRouter();
+  const authModal = useRecoilValue(authModalState);
+  const setAuthModalState = useSetRecoilState(authModalState);
+  const [user, loading] = useAuthState(auth);
+  const [pageLoading, setPageLoading] = useState(true);
+  const modalRef = useRef<HTMLDivElement>(null);
 
-const Page = () => {
-    const router = useRouter();
-    const authModal = useRecoilValue(authModalState);
-    const setAuthModalState = useSetRecoilState(authModalState);
-    const [user, loading] = useAuthState(auth);
-    const [pageLoading, setPageLoading] = useState(true);
-    const modalRef = useRef<HTMLDivElement>(null);
+  const [windowWidth, setWindowWidth] = useState(0);
 
-    useEffect(() => {
-        if (user) {
-            router.push("/dashboard");
-        } else if (!loading) {
-            setPageLoading(false);
-        }
-    }, [user, router, loading]);
 
-    // Ensure all hooks are called in the same order on every render
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                setAuthModalState({ ...authModal, isOpen: false });
-            }
-        };
 
-        if (authModal.isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
+  useEffect(() => {
 
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [authModal, setAuthModalState]);
+      if (typeof window !== 'undefined') {
 
-    if (pageLoading) {
-        return null;
+          setWindowWidth(window.innerWidth);
+
+      }
+
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    } else if (!loading) {
+      setPageLoading(false);
     }
+  }, [user, router, loading]);
 
-    const openAuthModal = (type: "login" | "signup") => {
-        setAuthModalState({ isOpen: true, type });
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        setAuthModalState({ ...authModal, isOpen: false });
+      }
     };
 
+    if (authModal.isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [authModal, setAuthModalState]);
+
+  if (pageLoading) {
+    return null;
+  }
+
+  const openAuthModal = (type: "login" | "signup") => {
+    setAuthModalState({ isOpen: true, type });
+  };
+
     return (
+        
         <div className="bg-gradient-to-b from-indigo-900 to-blue-900 min-h-screen text-white relative">
            
             <section className="container mx-auto px-4 py-20 text-center">
@@ -92,7 +106,8 @@ const Page = () => {
         </div>
     );
 }
-export default Page;
+
+export default Auth;
 
 type FeatureCardProp={
     icon:any;
@@ -100,9 +115,13 @@ type FeatureCardProp={
     description:string;
 }
 const FeatureCard = ({ icon, title, description }:FeatureCardProp) => (
-    <div className="bg-indigo-800 p-6 rounded-lg text-center items-center flex flex-col">
-        <div className="text-4xl mb-4">{icon}</div>
-        <h4 className="text-xl font-semibold mb-2">{title}</h4>
-        <p>{description}</p>
-    </div>
+  <motion.div 
+  whileHover={{ scale: 1.05 }}
+  transition={{ duration: 0.3 }}
+  className="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col items-center text-center"
+>
+  <div className="text-4xl mb-2 text-blue-400">{icon}</div>
+  <h3 className="text-xl font-semibold mb-2">{title}</h3>
+  <p className="text-gray-400">{description}</p>
+</motion.div>
 );

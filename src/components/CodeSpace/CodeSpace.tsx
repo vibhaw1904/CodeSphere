@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, {  useState } from 'react';
 import Split from 'react-split';
 import ProblemDescription from './ProblemDescription';
 import PlayGround from './codeEditor/PlayGround';
@@ -15,7 +15,9 @@ const CodeSpace:React.FC<CodeSpaceProps> = ({problem}) => {
    
     return <Split className='split'>
         <ProblemDescription problem={problem} _solved={solved}/>
+       
         <PlayGround language={language} problem={problem} setLanguage={setLanguage} setSolved={setSolved}/>
+
     </Split>
 }
 export default CodeSpace;
